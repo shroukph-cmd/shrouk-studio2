@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استوديو شروق إبراهيم - الإصدار 3.1</title>
+<meta name="theme-color" content="#8e44ad">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --primary:#8e44ad; --primary-d:#6c3483; --gold:#c9a227;
+  --bg:#f4f1f7; --card:#ffffff; --text:#2c2434; --muted:#7a7086;
+  --ok:#27ae60; --warn:#e67e22; --bad:#c0392b; --line:#e6e0ee;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--text);}
+.app{max-width:1100px; margin:0 auto; padding:16px;}
+header.top{background:linear-gradient(135deg,var(--primary),var(--primary-d)); color:#fff;
+  border-radius:14px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+header.top h1{font-size:1.4rem;}
+header.top .ver{background:var(--gold); color:#fff; font-size:.75rem; padding:3px 10px; border-radius:20px; margin-inline-start:8px;}
+nav.tabs{display:flex; gap:8px; margin:16px 0; flex-wrap:wrap;}
+nav.tabs button{flex:1; min-width:120px; padding:11px 8px; border:none; border-radius:10px; background:#e9e2f2;
+  color:var(--primary-d); font-weight:bold; font-size:.95rem; cursor:pointer; transition:.15s;}
+nav.tabs button.active{background:var(--primary); color:#fff;}
+nav.tabs button:hover:not(.active){background:#ddd0ec;}
+.card{background:var(--card); border-radius:14px; padding:20px; box-shadow:0 2px 10px rgba(80,50,110,.08); margin-bottom:16px;}
+.card h2{font-size:1.1rem; color:var(--primary-d); margin-bottom:14px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+.grid{display:grid; gap:12px;}
+.grid.c2{grid-template-columns:1fr 1fr;}
+.grid.c3{grid-template-columns:1fr 1fr 1fr;}
+.grid.c4{grid-template-columns:repeat(4,1fr);}
+label{display:block; font-size:.85rem; color:var(--muted); margin-bottom:4px;}
+input,select,textarea{width:100%; padding:9px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:.95rem; font-family:inherit; background:#fdfcff;}
+input:focus,select:focus,textarea:focus{outline:none; border-color:var(--primary);}
+.btn{padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-size:.95rem; font-weight:bold; font-family:inherit;}
+.btn.p{background:var(--primary); color:#fff;} .btn.p:hover{background:var(--primary-d);}
+.btn.g{background:#ece5f4; color:var(--primary-d);} .btn.g:hover{background:#ddd0ec;}
+.btn.ok{background:var(--ok); color:#fff;} .btn.warn{background:var(--warn); color:#fff;} .btn.bad{background:var(--bad); color:#fff;}
+.btn.sm{padding:5px 12px; font-size:.82rem;}
+.row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+table{width:100%; border-collapse:collapse; font-size:.92rem;}
+th{background:#f3edf9; color:var(--primary-d); padding:9px 10px; text-align:right; border-bottom:2px solid var(--line);}
+td{padding:9px 10px; border-bottom:1px solid var(--line);}
+tr:hover td{background:#faf7fd;}
+.badge{display:inline-block; padding:3px 10px; border-radius:20px; font-size:.78rem; font-weight:bold;}
+.badge.up{background:#fdebd0; color:#9c5a10;} .badge.done{background:#d5f5e3; color:#1d7a43;} .badge.cancel{background:#f9d5d0; color:#96281b;}
+.badge.today{background:#e8daF7; color:var(--primary-d);}
+.muted{color:var(--muted); font-size:.85rem;}
+.empty{text-align:center; color:var(--muted); padding:26px 10px;}
+.items-row{display:grid; grid-template-columns:2fr 110px 40px; gap:8px; margin-bottom:8px;}
+.totals{background:#f8f5fc; border-radius:10px; padding:14px 16px; margin-top:10px;}
+.totals .trow{display:flex; justify-content:space-between; padding:4px 0; font-size:.95rem;}
+.totals .grand{font-size:1.15rem; font-weight:bold; color:var(--primary-d); border-top:2px dashed var(--line); margin-top:6px; padding-top:8px;}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px;}
+.stat{background:var(--card); border-radius:12px; padding:14px 16px; box-shadow:0 2px 8px rgba(80,50,110,.07); border-right:4px solid var(--primary);}
+.stat .n{font-size:1.5rem; font-weight:bold; color:var(--primary-d);}
+.stat .l{font-size:.82rem; color:var(--muted);}
+.stat.gold{border-right-color:var(--gold);} .stat.gold .n{color:#9c7d12;}
+.stat.green{border-right-color:var(--ok);} .stat.green .n{color:#1d7a43;}
+.search-box{margin-bottom:12px;}
+.chip{background:#f0eaf8; border-radius:20px; padding:4px 14px; font-size:.82rem; display:inline-block; margin:2px;}
+.alert{background:#fdf3e7; border:1px solid #f0c891; color:#8a5a15; padding:10px 14px; border-radius:8px; font-size:.88rem; margin-bottom:12px;}
+.toast{position:fixed; bottom:20px; right:50%; transform:translateX(50%); background:var(--primary-d); color:#fff; padding:12px 24px; border-radius:10px; display:none; z-index:99; box-shadow:0 4px 15px rgba(0,0,0,.2);}
+/* Invoice */
+.invoice{background:#fff; border:1px solid var(--line); border-radius:12px; padding:30px 34px; max-width:800px; margin:0 auto;}
+.inv-head{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:3px double var(--primary); padding-bottom:14px; margin-bottom:16px;}
+.inv-head h2{color:var(--primary); font-size:1.5rem;}
+.inv-head .sub{color:var(--muted); font-size:.85rem; margin-top:4px;}
+.inv-no{background:var(--primary); color:#fff; padding:6px 16px; border-radius:8px; font-weight:bold;}
+.inv-sec{margin-bottom:14px; font-size:.95rem;}
+.inv-sec b{color:var(--primary-d);}
+.inv table{margin:10px 0;}
+.terms-box{background:#faf7fd; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-top:16px;}
+.terms-box h3{font-size:.95rem; color:var(--primary-d); margin-bottom:8px;}
+.terms-box ol{padding-right:20px; font-size:.82rem; line-height:1.9;}
+.sig{display:flex; justify-content:space-between; margin-top:34px; font-size:.9rem;}
+.sig div{text-align:center; width:40%; border-top:1.5px dashed #999; padding-top:6px;}
+@media print{
+  body *{visibility:hidden;} #printArea,#printArea *{visibility:visible;}
+  #printArea{position:absolute; inset:0; width:100%; padding:0;}
+  .invoice{border:none; border-radius:0; max-width:100%; padding:10mm;}
+  @page{size:A4; margin:10mm;}
+}
+@media(max-width:640px){ .grid.c2,.grid.c3,.grid.c4{grid-template-columns:1fr;} .items-row{grid-template-columns:1.5fr 90px 36px;} }
+</style>
+</head>
+<body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>📸 استوديو شروق إبراهيم<span class="ver">الإصدار 3.1</span></h1>
+      <div style="font-size:.85rem;opacity:.9;">نظام إدارة الحجوزات والفواتير</div>
+    </div>
+    <span id="syncChip" class="chip" style="background:#fdebd0;">🟡 المزامنة غير مفعّلة</span>
+    <div class="row">
+      <button class="btn g" onclick="exportData()">⬇️ نسخة احتياطية</button>
+      <label class="btn g" style="margin:0;">⬆️ استرجاع<input type="file" accept=".json" onchange="importData(event)" hidden></label>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button id="tab-dash" class="active" onclick="showTab('dash')">الرئيسية</button>
+    <button id="tab-order" onclick="showTab('order')">حجز جديد</button>
+    <button id="tab-orders" onclick="click:; showTab('orders')">الفواتير والحجوزات</button>
+    <button id="tab-clients" onclick="showTab('clients')">العملاء</button>
+    <button id="tab-pkgs" onclick="showTab('pkgs')">الباقات</button>
+    <button id="tab-settings" onclick="showTab('settings')">الإعدادات</button>
+  </nav>
+
+  <!-- Dashboard -->
+  <section id="sec-dash">
+    <div class="stats" id="stats"></div>
+    <div class="card">
+      <h2>📅 حجوزات اليوم</h2>
+      <div id="todayOrders"></div>
+    </div>
+    <div class="card">
+      <h2>🔜 أقرب الحجوزات (7 أيام)</h2>
+      <div id="upcoming"></div>
+    </div>
+  </section>
+
+  <!-- New order -->
+  <section id="sec-order" style="display:none;">
+    <div class="card">
+      <h2 id="orderFormTitle">📝 حجز جديد / فاتورة</h2>
+      <input type="hidden" id="o_id">
+      <div class="grid c3">
+        <div>
+          <label>العميل *</label>
+          <select id="o_client" onchange="clientChanged()"></select>
+        </div>
+        <div>
+          <label>أو عميل جديد — الاسم</label>
+          <input id="o_newname" placeholder="اسم العميل الجديد">
+        </div>
+        <div>
+          <label>تاريخ السيشن *</label>
+          <input type="date" id="o_date">
+        </div>
+        <div>
+          <label>الوقت</label>
+          <input type="time" id="o_time">
+        </div>
+        <div>
+          <label>📍 مكان السيشن *</label>
+          <input id="o_location" placeholder="مثال: حديقة الأورمان - القاهرة">
+        </div>
+        <div>
+          <label>الحالة</label>
+          <select id="o_status">
+            <option value="up">قادم</option>
+            <option value="done">تم التنفيذ</option>
+            <option value="cancel">ملغي</option>
+          </select>
+        </div>
+      </div>
+      <div id="clientPhones" style="margin-top:8px;"></div>
+      <div id="sameDayWarn"></div>
+
+      <h2 style="margin-top:20px;">🧾 الخدمات والباقات</h2>
+      <div id="items"></div>
+      <div class="row" style="margin-top:6px;">
+        <button class="btn g sm" onclick="addItem()">➕ إضافة باقة/خدمة</button>
+        <button class="btn g sm" onclick="addExtra('تسليم مستعجل (يومان)',500)">⚡ تسليم مستعجل +500</button>
+        <button class="btn g sm" onclick="addExtra('رسوم تأخير',500)">⏰ رسوم تأخير +500</button>
+        <button class="btn g sm" onclick="addExtra('تصوير خارج الفيوم',1000)">🚌 خارج الفيوم من +1000</button>
+      </div>
+
+      <div class="grid c3" style="margin-top:16px;">
+        <div>
+          <label>العربون (جنيه)</label>
+          <input type="number" id="o_deposit" value="1000" min="0" oninput="calcTotal()">
+        </div>
+        <div>
+          <label>ملاحظات</label>
+          <input id="o_notes" placeholder="أي ملاحظات إضافية">
+        </div>
+      </div>
+
+      <div class="totals">
+        <div class="trow"><span>الإجمالي</span><span id="t_total">0 جنيه</span></div>
+        <div class="trow"><span>المدفوع (عربون)</span><span id="t_paid">0 جنيه</span></div>
+        <div class="trow grand"><span>المتبقي</span><span id="t_remain">0 جنيه</span></div>
+      </div>
+
+      <div class="row" style="margin-top:16px;">
+        <button class="btn p" onclick="saveOrder()">💾 حفظ الحجز</button>
+        <button class="btn ok" onclick="saveOrder(true)">💾 حفظ وطباعة فاتورة الحجز</button>
+        <button class="btn g" onclick="resetOrderForm()">🗑️ تفريغ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Orders list -->
+  <section id="sec-orders" style="display:none;">
+    <div class="card">
+      <h2>🗂️ الفواتير والحجوزات</h2>
+      <div class="row search-box">
+        <input style="max-width:280px;" id="ordSearch" placeholder="🔍 بحث بالاسم أو رقم الفاتورة..." oninput="renderOrders()">
+        <select style="max-width:150px;" id="ordFilter" onchange="renderOrders()">
+          <option value="">كل الحالات</option>
+          <option value="up">قادم</option>
+          <option value="done">تم التنفيذ</option>
+          <option value="cancel">ملغي</option>
+        </select>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+  </section>
+
+  <!-- Clients -->
+  <section id="sec-clients" style="display:none;">
+    <div class="card">
+      <h2>➕ تسجيل عميل جديد</h2>
+      <input type="hidden" id="c_id">
+      <div class="grid c4">
+        <div><label>اسم العميل *</label><input id="c_name"></div>
+        <div><label>📱 الموبايل 1 *</label><input id="c_phone1" placeholder="01xxxxxxxxx"></div>
+        <div><label>📱 الموبايل 2</label><input id="c_phone2" placeholder="01xxxxxxxxx"></div>
+        <div><label>ملاحظات</label><input id="c_notes"></div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <button class="btn p" onclick="saveClient()">💾 حفظ العميل</button>
+        <button class="btn g" onclick="resetClientForm()">تفريغ</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>👥 قائمة العملاء</h2>
+      <input class="search-box" style="max-width:280px;" id="cliSearch" placeholder="🔍 بحث..." oninput="renderClients()">
+      <div id="clientsList"></div>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section id="sec-pkgs" style="display:none;">
+    <div class="card">
+      <h2>➕ إضافة باقة</h2>
+      <div class="grid c3">
+        <div><label>اسم الباقة / الخدمة *</label><input id="p_name"></div>
+        <div><label>السعر (جنيه) *</label><input type="number" id="p_price" min="0"></div>
+        <div><label>النوع</label>
+          <select id="p_cat"><option value="pkg">📦 باقة</option><option value="extra">➕ إضافة</option></select>
+        </div>
+        <div style="grid-column:1/-1;"><label>التفاصيل (تظهر تحت الاسم في الفاتورة)</label><input id="p_desc" placeholder="مثال: ألبوم كبير • ألبوم صغير • تابلو"></div>
+      </div>
+      <button class="btn p" style="margin-top:12px;" onclick="savePkg()">💾 إضافة</button>
+    </div>
+    <div class="card">
+      <h2>📦 الباقات المتاحة</h2>
+      <div id="pkgsList"></div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="sec-settings" style="display:none;">
+<div class="card">
+      <h2>☁️ مزامنة البيانات بين الأجهزة (Firebase)</h2>
+      <div class="alert">بعد التفعيل، كل تعديل تسجّليه على أي جهاز (موبايل / لابتوب) هيظهر على باقي الأجهزة تلقائيًا. التطبيق يشتغل أوفلاين عادي، ويمزامن أول ما النت يرجع.</div>
+      <div class="grid c2">
+        <div>
+          <label>كود المزامنة * (اكتبيه نفسه على كل الأجهزة)</label>
+          <input id="s_code" dir="ltr" placeholder="shorouk-studio-2026" style="text-align:left;">
+        </div>
+        <div>
+          <label>إعدادات Firebase (انسخي الـ JSON من Firebase والصقيه هنا)</label>
+          <textarea id="s_fb" rows="4" dir="ltr" style="font-size:.72rem;" placeholder='{"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"..."}'></textarea>
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <button class="btn p" onclick="saveSyncSettings()">💾 تفعيل المزامنة</button>
+        <button class="btn bad" onclick="clearSync()">⛔ إيقاف المزامنة</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>⚙️ إعدادات الاستوديو (تظهر على الفاتورة)</h2>
+      <div class="grid c2">
+        <div><label>اسم الاستوديو</label><input id="s_name"></div>
+        <div><label>أرقام التواصل</label><input id="s_phone"></div>
+        <div><label>العنوان</label><input id="s_addr"></div>
+        <div><label>نص الترحيب أسفل الفاتورة</label><input id="s_footer"></div>
+      </div>
+      <button class="btn p" style="margin-top:12px;" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+    </div>
+  </section>
+</div>
+
+<div id="printArea" style="display:none;"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ================== البيانات ==================
+const TERMS = [
+"تأكيد الحجز: لا يتم تأكيد الحجز إلا بدفع عربون 1000 جنيه.",
+"العربون: غير قابل للاسترداد في حالة إلغاء الحجز من طرف العميل.",
+"الأسعار: لا تشمل أماكن التصوير.",
+"سداد المبلغ المتبقي: يتم دفع باقي المبلغ المتفق عليه قبل المناسبة بيوم أو بحد أقصى يومين.",
+"التأخير: في حالة تأخر العميل عن الموعد المحدد، يتم فرض رسوم إضافية 500 جنيه.",
+"تسليم الصور: خلال 15 إلى 25 يومًا من تاريخ السيشن.",
+"التسليم المستعجل: يمكن تسليم الصور خلال يومين مقابل 500 جنيه إضافية.",
+"الصور الخام (RAW): لا يتم تسليم الصور بصيغة RAW.",
+"تنسيق الموعد والمكان: يتم الاتفاق مسبقًا مع العميل على موعد ومكان التصوير قبل السيشن.",
+"حجز نفس المكان: في حالة وجود مصور آخر في نفس المكان دون إبلاغ مسبق، يتم إلغاء الحجز فورًا ولا يُسترد العربون.",
+"التصوير خارج الفيوم: تبدأ الرسوم الإضافية من 1000 جنيه حسب المكان.",
+"تصوير القاعة: يتم توفير شاب لتصوير القاعة.",
+"مدة سيشن الزفاف: ساعتان."
+];
+const DEF_PKGS = [
+{id:1,cat:"pkg",name:"PACKAGE 1 — BASIC",price:3000,desc:"تصوير سيشن الزفاف • تسليم الصور على فلاشة • تعديل احترافي للصور"},
+{id:2,cat:"pkg",name:"PACKAGE 2 — STANDARD",price:4500,desc:"تصوير سيشن الزفاف • ألبوم كبير • ألبوم صغير"},
+{id:3,cat:"pkg",name:"PACKAGE 3 — PREMIUM",price:6500,desc:"تصوير سيشن الزفاف • تصوير التجهيزات • ألبوم كبير مستورد • ألبوم صغير • تابلو • ريل"},
+{id:4,cat:"extra",name:"تصوير ريلز يوم كامل (سيشن وتجهيزات)",price:2000,desc:""},
+{id:5,cat:"extra",name:"تصوير ريلز سيشن فقط",price:1000,desc:""},
+{id:6,cat:"extra",name:"مصور إضافي",price:1500,desc:""},
+{id:7,cat:"extra",name:"تصوير خطوبة",price:3000,desc:""},
+{id:8,cat:"extra",name:"كتب كتاب",price:3000,desc:""},
+{id:9,cat:"extra",name:"حنة",price:3000,desc:""},
+{id:10,cat:"extra",name:"تابلو",price:300,desc:""},
+{id:11,cat:"extra",name:"تصوير تجهيزات",price:2500,desc:""},
+{id:12,cat:"extra",name:"تصوير قاعة",price:1300,desc:""}
+];
+const DEF_SETTINGS = {name:"استوديو شروق إبراهيم", phone:"01025483812", addr:"الفيوم", footer:"شكرًا لثقتكم — استوديو شروق إبراهيم"};
+
+let state = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem("shorouk_v23");
+    if(raw){ return JSON.parse(raw); }
+    for(const k of ["shorouk_v22","shorouk_v21"]){
+      const old = localStorage.getItem(k);
+      if(old){
+        const o = JSON.parse(old);
+        return {clients:o.clients||[], orders:o.orders||[],
+                pkgs:DEF_PKGS.map(p=>({...p})), settings:{...DEF_SETTINGS}, seq:o.seq||1};
+      }
+    }
+  }catch(e){}
+  return {clients:[],orders:[],pkgs:DEF_PKGS.map(p=>({...p})),
+          settings:{...DEF_SETTINGS}, seq:1};
+}
+function save(fromCloud){ state.updatedAt=Date.now(); localStorage.setItem("shorouk_v23", JSON.stringify(state)); if(!fromCloud) schedulePush(); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function fmt(n){ return (Number(n)||0).toLocaleString("ar-EG") + " جنيه"; }
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",2200); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function clientById(id){ return state.clients.find(c=>c.id===id); }
+function orderNo(o){ return "INV-" + String(o.seq||0).padStart(4,"0"); }
+
+// ================== التنقل ==================
+function showTab(t){
+  ["dash","order","orders","clients","pkgs","settings"].forEach(x=>{
+    document.getElementById("sec-"+x).style.display = (x===t)?"block":"none";
+    document.getElementById("tab-"+x).classList.toggle("active", x===t);
+  });
+  if(t==="dash") renderDash();
+  if(t==="orders") renderOrders();
+  if(t==="clients") renderClients();
+  if(t==="pkgs") renderPkgs();
+  if(t==="settings") fillSettings();
+}
+
+// ================== العملاء ==================
+function saveClient(){
+  const name=document.getElementById("c_name").value.trim();
+  const p1=document.getElementById("c_phone1").value.trim();
+  const p2=document.getElementById("c_phone2").value.trim();
+  const notes=document.getElementById("c_notes").value.trim();
+  if(!name){ toast("⚠️ اكتب اسم العميل"); return; }
+  if(!p1){ toast("⚠️ اكتب رقم الموبايل الأول"); return; }
+  const id=document.getElementById("c_id").value;
+  if(id){
+    const c=clientById(id); Object.assign(c,{name,phone1:p1,phone2:p2,notes});
+    toast("✅ تم تعديل العميل");
+  }else{
+    state.clients.push({id:uid(),name,phone1:p1,phone2:p2,notes,createdAt:new Date().toISOString()});
+    toast("✅ تم حفظ العميل");
+  }
+  save(); resetClientForm(); renderClients(); fillClientSelect();
+}
+function resetClientForm(){ ["c_id","c_name","c_phone1","c_phone2","c_notes"].forEach(i=>document.getElementById(i).value=""); }
+function editClient(id){
+  const c=clientById(id); if(!c) return;
+  document.getElementById("c_id").value=c.id;
+  document.getElementById("c_name").value=c.name;
+  document.getElementById("c_phone1").value=c.phone1;
+  document.getElementById("c_phone2").value=c.phone2||"";
+  document.getElementById("c_notes").value=c.notes||"";
+  showTab("clients"); window.scrollTo(0,0);
+}
+function delClient(id){
+  if(!confirm("حذف العميل؟ (الحجوزات السابقة هتفضل محفوظة)")) return;
+  state.clients = state.clients.filter(c=>c.id!==id); save(); renderClients(); fillClientSelect();
+}
+function renderClients(){
+  const q=(document.getElementById("cliSearch").value||"").trim();
+  let list=state.clients.slice().sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  if(q) list=list.filter(c=>c.name.includes(q)||(c.phone1||"").includes(q)||(c.phone2||"").includes(q));
+  const box=document.getElementById("clientsList");
+  if(!list.length){ box.innerHTML='<div class="empty">لا يوجد عملاء — سجّل أول عميل من الأعلى 👆</div>'; return; }
+  box.innerHTML = `<table><tr><th>الاسم</th><th>موبايل 1</th><th>موبايل 2</th><th>ملاحظات</th><th></th></tr>` +
+    list.map(c=>`<tr>
+      <td><b>${esc(c.name)}</b></td>
+      <td dir="ltr">${esc(c.phone1)}</td>
+      <td dir="ltr">${esc(c.phone2||"—")}</td>
+      <td class="muted">${esc(c.notes||"")}</td>
+      <td class="row">
+        <button class="btn g sm" onclick="editClient('${c.id}')">✏️</button>
+        <button class="btn bad sm" onclick="delClient('${c.id}')">🗑️</button>
+      </td></tr>`).join("") + "</table>";
+}
+function fillClientSelect(){
+  const sel=document.getElementById("o_client");
+  sel.innerHTML = '<option value="">— اختر عميل —</option>' +
+    state.clients.slice().sort((a,b)=>a.name.localeCompare(b.name,"ar"))
+    .map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+}
+
+// ================== الباقات ==================
+function savePkg(){
+  const name=document.getElementById("p_name").value.trim();
+  const price=Number(document.getElementById("p_price").value)||0;
+  const cat=document.getElementById("p_cat").value;
+  const desc=document.getElementById("p_desc").value.trim();
+  if(!name||!price){ toast("⚠️ اكتب اسم الباقة والسعر"); return; }
+  state.pkgs.push({id:uid(),cat,name,price,desc}); save();
+  ["p_name","p_price","p_desc"].forEach(i=>document.getElementById(i).value="");
+  renderPkgs(); toast("✅ تمت الإضافة");
+}
+function delPkg(id){ if(!confirm("حذف الباقة؟")) return; state.pkgs=state.pkgs.filter(p=>p.id!==id); save(); renderPkgs(); }
+function renderPkgs(){
+  const box=document.getElementById("pkgsList");
+  if(!state.pkgs.length){ box.innerHTML='<div class="empty">لا توجد باقات</div>'; return; }
+  box.innerHTML=`<table><tr><th>النوع</th><th>الاسم</th><th>التفاصيل</th><th>السعر</th><th></th></tr>` +
+    state.pkgs.map(p=>`<tr>
+    <td>${p.cat==="extra"?'<span class="badge up">إضافة</span>':'<span class="badge done">باقة</span>'}</td>
+    <td><b>${esc(p.name)}</b></td>
+    <td class="muted" style="font-size:.82rem;">${esc(p.desc||"—")}</td>
+    <td>${fmt(p.price)}</td>
+    <td><button class="btn bad sm" onclick="delPkg('${p.id}')">🗑️</button></td></tr>`).join("")+"</table>";
+}
+
+// ================== الحجوزات ==================
+function fillClientSelect2(){}
+function clientChanged(){
+  const id=document.getElementById("o_client").value;
+  const c=clientById(id);
+  document.getElementById("clientPhones").innerHTML = c
+    ? `<div class="row"><span class="chip">📱 ${esc(c.phone1)}</span>${c.phone2?`<span class="chip">📱 ${esc(c.phone2)}</span>`:""}</div>` : "";
+  checkSameDay();
+}
+function checkSameDay(){
+  const d=document.getElementById("o_date").value;
+  const curId=document.getElementById("o_id").value;
+  const others=state.orders.filter(o=>o.date===d && o.id!==curId && o.status!=="cancel");
+  document.getElementById("sameDayWarn").innerHTML = (d && others.length)
+    ? `<div class="alert">ℹ️ يوجد ${others.length} حجز آخر في نفس اليوم (${others.map(o=>esc(clientById(o.clientId)?.name||"")).join("، ")}) — مسموح بأكثر من أوردر في اليوم الواحد.</div>` : "";
+}
+document.getElementById("o_date").addEventListener("change", checkSameDay);
+
+function addItem(name,price,desc){
+  const box=document.getElementById("items");
+  const div=document.createElement("div");
+  div.className="items-row";
+  div.innerHTML=`
+    <select class="it-name" onchange="itemSel(this)">
+      <option value="">— اختر باقة أو اكتب خدمة —</option>
+      <optgroup label="📦 الباقات">
+        ${state.pkgs.filter(p=>p.cat!=="extra").map(p=>`<option value="${esc(p.name)}" data-price="${p.price}" data-desc="${esc(p.desc||"")}">${esc(p.name)} — ${fmt(p.price)}</option>`).join("")}
+      </optgroup>
+      <optgroup label="➕ إضافات">
+        ${state.pkgs.filter(p=>p.cat==="extra").map(p=>`<option value="${esc(p.name)}" data-price="${p.price}" data-desc="${esc(p.desc||"")}">${esc(p.name)} — ${fmt(p.price)}</option>`).join("")}
+      </optgroup>
+      <option value="__custom">✏️ خدمة مخصصة (اكتبها تحت)</option>
+    </select>
+    <input type="number" class="it-price" min="0" placeholder="السعر" oninput="calcTotal()">
+    <button class="btn bad sm" onclick="this.parentElement.remove();calcTotal()">✖</button>`;
+  box.appendChild(div);
+  if(name!==undefined){
+    const sel=div.querySelector(".it-name");
+    sel.value=name; if(sel.value!==name) sel.value="__custom";
+    div.querySelector(".it-price").value=price||0;
+    if(desc) div.dataset.desc=desc;
+  }
+  calcTotal();
+}
+function addExtra(name,price){ addItem(name,price); }
+function itemSel(sel){
+  const opt=sel.options[sel.selectedIndex];
+  const row=sel.closest(".items-row");
+  const priceInp=row.querySelector(".it-price");
+  if(opt && opt.dataset.price){ priceInp.value=opt.dataset.price; row.dataset.desc=opt.dataset.desc||""; }
+  if(sel.value==="__custom"){ sel.outerHTML=`<input class="it-name" placeholder="اسم الخدمة">`; row.dataset.desc=""; }
+  calcTotal();
+}
+function calcTotal(){
+  let total=0;
+  document.querySelectorAll("#items .items-row").forEach(r=>{
+    total += Number(r.querySelector(".it-price").value)||0;
+  });
+  const dep=Number(document.getElementById("o_deposit").value)||0;
+  document.getElementById("t_total").textContent=fmt(total);
+  document.getElementById("t_paid").textContent=fmt(dep);
+  document.getElementById("t_remain").textContent=fmt(total-dep);
+}
+function resetOrderForm(){
+  ["o_id","o_newname","o_time","o_location","o_notes"].forEach(i=>document.getElementById(i).value="");
+  document.getElementById("o_client").value="";
+  document.getElementById("o_deposit").value=1000;
+  document.getElementById("o_date").value="";
+  document.getElementById("items").innerHTML="";
+  document.getElementById("clientPhones").innerHTML="";
+  document.getElementById("sameDayWarn").innerHTML="";
+  document.getElementById("orderFormTitle").textContent="📝 حجز جديد / فاتورة";
+  addItem(); calcTotal();
+}
+function saveOrder(printAfter){
+  // client
+  let clientId=document.getElementById("o_client").value;
+  const newName=document.getElementById("o_newname").value.trim();
+  if(!clientId && newName){
+    const c={id:uid(),name:newName,phone1:"",phone2:"",notes:"",createdAt:new Date().toISOString()};
+    state.clients.push(c); clientId=c.id;
+  }
+  if(!clientId){ toast("⚠️ اختر عميل أو سجل عميل جديد"); return; }
+  const date=document.getElementById("o_date").value;
+  if(!date){ toast("⚠️ اختر تاريخ السيشن"); return; }
+  const location=document.getElementById("o_location").value.trim();
+  if(!location){ toast("⚠️ اكتب مكان السيشن"); return; }
+  const items=[];
+  document.querySelectorAll("#items .items-row").forEach(r=>{
+    const nm=r.querySelector(".it-name");
+    const name=nm.tagName==="SELECT" ? (nm.value==="__custom"?"":nm.value) : nm.value.trim();
+    const price=Number(r.querySelector(".it-price").value)||0;
+    const desc=r.dataset.desc||"";
+    if(name||price) items.push({name,price,desc});
+  });
+  if(!items.length){ toast("⚠️ أضف خدمة واحدة على الأقل"); return; }
+
+  const id=document.getElementById("o_id").value;
+  const data={
+    clientId, date, time:document.getElementById("o_time").value,
+    location, items,
+    deposit:Number(document.getElementById("o_deposit").value)||0,
+    notes:document.getElementById("o_notes").value.trim(),
+    status:document.getElementById("o_status").value
+  };
+  let saved;
+  if(id){
+    const o=state.orders.find(x=>x.id===id); Object.assign(o,data); saved=o;
+    toast("✅ تم تعديل الحجز");
+  }else{
+    saved={id:uid(), seq:state.seq++, createdAt:new Date().toISOString(), ...data};
+    state.orders.push(saved);
+    toast("✅ تم حفظ الحجز");
+  }
+  save(); resetOrderForm(); fillClientSelect(); renderDash();
+  if(printAfter) printInvoice(saved.id);
+  else showTab("orders");
+}
+function editOrder(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  document.getElementById("o_id").value=o.id;
+  fillClientSelect();
+  document.getElementById("o_client").value=o.clientId;
+  document.getElementById("o_date").value=o.date;
+  document.getElementById("o_time").value=o.time||"";
+  document.getElementById("o_location").value=o.location;
+  document.getElementById("o_status").value=o.status;
+  document.getElementById("o_deposit").value=o.deposit;
+  document.getElementById("o_notes").value=o.notes||"";
+  document.getElementById("orderFormTitle").textContent="✏️ تعديل حجز "+orderNo(o);
+  const box=document.getElementById("items"); box.innerHTML="";
+  o.items.forEach(it=>addItem(it.name,it.price,it.desc));
+  if(!o.items.length) addItem();
+  clientChanged(); calcTotal();
+  showTab("order"); window.scrollTo(0,0);
+}
+function delOrder(id){
+  if(!confirm("حذف الحجز نهائيًا؟")) return;
+  state.orders=state.orders.filter(o=>o.id!==id); save(); renderOrders(); renderDash();
+  toast("🗑️ تم الحذف");
+}
+function statusBadge(s){
+  return s==="done" ? '<span class="badge done">تم التنفيذ</span>'
+       : s==="cancel" ? '<span class="badge cancel">ملغي</span>'
+       : '<span class="badge up">قادم</span>';
+}
+function renderOrders(){
+  const q=(document.getElementById("ordSearch").value||"").trim();
+  const f=document.getElementById("ordFilter").value;
+  let list=state.orders.slice().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  if(f) list=list.filter(o=>o.status===f);
+  if(q) list=list.filter(o=>{ const c=clientById(o.clientId); return orderNo(o).includes(q)||(c&&c.name.includes(q)); });
+  const box=document.getElementById("ordersList");
+  if(!list.length){ box.innerHTML='<div class="empty">لا توجد حجوزات</div>'; return; }
+  box.innerHTML=`<table><tr><th>رقم الفاتورة</th><th>العميل</th><th>التاريخ</th><th>المكان</th><th>الإجمالي</th><th>المتبقي</th><th>الحالة</th><th></th></tr>` +
+    list.map(o=>{
+      const c=clientById(o.clientId)||{name:"—"};
+      const total=o.items.reduce((s,i)=>s+i.price,0);
+      const todayMark = o.date===todayStr() ? ' <span class="badge today">اليوم</span>' : '';
+      return `<tr>
+        <td><b>${orderNo(o)}</b>${todayMark}</td>
+        <td>${esc(c.name)}</td>
+        <td>${o.date} ${o.time||""}</td>
+        <td>${esc(o.location)}</td>
+        <td>${fmt(total)}</td>
+        <td style="color:${total-o.deposit>0?'var(--bad)':'var(--ok)'}">${fmt(total-o.deposit)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td class="row" style="white-space:nowrap;">
+          <button class="btn g sm" onclick="printInvoice('${o.id}')">🖨️</button>
+          <button class="btn g sm" onclick="editOrder('${o.id}')">✏️</button>
+          <button class="btn bad sm" onclick="delOrder('${o.id}')">🗑️</button>
+        </td></tr>`;
+    }).join("") + "</table>";
+}
+
+// ================== الرئيسية ==================
+function renderDash(){
+  const today=todayStr();
+  const tOrders=state.orders.filter(o=>o.date===today && o.status!=="cancel");
+  const upOrders=state.orders.filter(o=>o.date>today && o.status==="up")
+    .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,10);
+  const month=new Date().toISOString().slice(0,7);
+  const mDone=state.orders.filter(o=>o.status==="done" && (o.date||"").startsWith(month));
+  const mRev=mDone.reduce((s,o)=>s+o.items.reduce((x,i)=>x+i.price,0),0);
+  const mCollected=mDone.reduce((s,o)=>s+o.deposit + 0,0);
+  const tRemain=tOrders.reduce((s,o)=>s+(o.items.reduce((x,i)=>x+i.price,0)-o.deposit),0);
+
+  document.getElementById("stats").innerHTML=`
+    <div class="stat"><div class="n">${tOrders.length}</div><div class="l">حجوزات اليوم</div></div>
+    <div class="stat gold"><div class="n">${tRemain.toLocaleString("ar-EG")} ج</div><div class="l">متبقي تحصيل اليوم</div></div>
+    <div class="stat green"><div class="n">${mRev.toLocaleString("ar-EG")} ج</div><div class="l">إيرادات الشهر (منفذ)</div></div>
+    <div class="stat"><div class="n">${state.clients.length}</div><div class="l">إجمالي العملاء</div></div>`;
+
+  document.getElementById("todayOrders").innerHTML = tOrders.length ?
+    `<table><tr><th>الوقت</th><th>العميل</th><th>المكان</th><th>الخدمات</th><th>المتبقي</th></tr>` +
+    tOrders.sort((a,b)=>(a.time||"").localeCompare(b.time||"")).map(o=>{
+      const c=clientById(o.clientId)||{name:"—"};
+      const total=o.items.reduce((s,i)=>s+i.price,0);
+      return `<tr><td>${o.time||"—"}</td><td><b>${esc(c.name)}</b></td><td>${esc(o.location)}</td>
+        <td class="muted">${esc(o.items.map(i=>i.name).join(" + "))}</td>
+        <td style="color:${total-o.deposit>0?'var(--bad)':'var(--ok)'}">${fmt(total-o.deposit)}</td></tr>`;
+    }).join("")+"</table>" : '<div class="empty">مفيش حجوزات النهاردة 🎉</div>';
+
+  document.getElementById("upcoming").innerHTML = upOrders.length ?
+    `<table><tr><th>التاريخ</th><th>الوقت</th><th>العميل</th><th>المكان</th><th>الحالة</th></tr>` +
+    upOrders.map(o=>{
+      const c=clientById(o.clientId)||{name:"—"};
+      return `<tr><td>${o.date}</td><td>${o.time||"—"}</td><td>${esc(c.name)}</td><td>${esc(o.location)}</td><td>${statusBadge(o.status)}</td></tr>`;
+    }).join("")+"</table>" : '<div class="empty">لا توجد حجوزات قادمة</div>';
+}
+
+// ================== الطباعة ==================
+function printInvoice(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  const c=clientById(o.clientId)||{name:"عميل محذوف",phone1:"",phone2:""};
+  const s=state.settings;
+  const total=o.items.reduce((x,i)=>x+i.price,0);
+  const remain=total-o.deposit;
+  document.getElementById("printArea").innerHTML=`
+  <div class="invoice">
+    <div class="inv-head">
+      <div>
+        <h2>📸 ${esc(s.name)}</h2>
+        <div class="sub">${esc(s.addr)} — ${esc(s.phone)}</div>
+      </div>
+      <div style="text-align:left;">
+        <div class="inv-no">${orderNo(o)}</div>
+        <div class="sub" style="margin-top:6px;">تاريخ الحجز: ${o.date}${o.time?" — "+o.time:""}</div>
+      </div>
+    </div>
+    <div class="inv-sec">
+      <b>العميل:</b> ${esc(c.name)} &nbsp;|&nbsp; <b>موبايل 1:</b> <span dir="ltr">${esc(c.phone1)}</span>
+      ${c.phone2?` &nbsp;|&nbsp; <b>موبايل 2:</b> <span dir="ltr">${esc(c.phone2)}</span>`:""}
+    </div>
+    <div class="inv-sec"><b>📍 مكان السيشن:</b> ${esc(o.location)}</div>
+    <table>
+      <tr><th>#</th><th>الخدمة / الباقة</th><th>السعر</th></tr>
+      ${o.items.map((i,idx)=>`<tr><td>${idx+1}</td><td>${esc(i.name)}${i.desc?`<div class="muted" style="font-size:.8rem;">${esc(i.desc)}</div>`:""}</td><td>${fmt(i.price)}</td></tr>`).join("")}
+      <tr><td colspan="2" style="text-align:left;font-weight:bold;">الإجمالي</td><td><b>${fmt(total)}</b></td></tr>
+      <tr><td colspan="2" style="text-align:left;">المدفوع (عربون)</td><td>${fmt(o.deposit)}</td></tr>
+      <tr><td colspan="2" style="text-align:left;font-weight:bold;color:${remain>0?'#c0392b':'#27ae60'};">المتبقي</td>
+          <td style="font-weight:bold;color:${remain>0?'#c0392b':'#27ae60'};">${fmt(remain)}</td></tr>
+    </table>
+    ${o.notes?`<div class="inv-sec"><b>ملاحظات:</b> ${esc(o.notes)}</div>`:""}
+    <div class="terms-box">
+      <h3>📋 شروط الحجز والتصوير</h3>
+      <ol>${TERMS.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
+    </div>
+    <div style="text-align:center;margin-top:22px;" class="muted">${esc(s.footer)}</div>
+  </div>`;
+  document.getElementById("printArea").style.display="block";
+  setTimeout(()=>{ window.print(); document.getElementById("printArea").style.display="none"; }, 100);
+}
+
+// ================== إعدادات ==================
+function fillSettings(){
+  fillSyncSettings();
+  const s=state.settings;
+  document.getElementById("s_name").value=s.name;
+  document.getElementById("s_phone").value=s.phone;
+  document.getElementById("s_addr").value=s.addr;
+  document.getElementById("s_footer").value=s.footer;
+}
+function saveSettings(){
+  state.settings={
+    name:document.getElementById("s_name").value.trim()||DEF_SETTINGS.name,
+    phone:document.getElementById("s_phone").value.trim(),
+    addr:document.getElementById("s_addr").value.trim(),
+    footer:document.getElementById("s_footer").value.trim()
+  };
+  save(); toast("✅ تم حفظ الإعدادات");
+}
+
+// ================== المزامنة السحابية (Firebase) ==================
+const SYNCKEY = "shorouk_sync";
+let fbApp=null, fbDb=null, fbRef=null, syncOn=false, firstSnapshot=true, pushTimer=null;
+
+function getSyncCfg(){ try{ return JSON.parse(localStorage.getItem(SYNCKEY)||"{}"); }catch(e){ return {}; } }
+function setSyncCfg(c){ localStorage.setItem(SYNCKEY, JSON.stringify(c)); }
+function syncStatus(txt, bg, fg){
+  const el=document.getElementById("syncChip");
+  if(el){ el.textContent=txt; el.style.background=bg; el.style.color=fg||""; }
+}
+function rerenderAll(){
+  fillClientSelect(); renderDash(); renderOrders(); renderClients(); renderPkgs();
+}
+function cloudPush(){
+  if(!syncOn || !fbRef) return;
+  syncStatus("🟡 جاري المزامنة...","#fdebd0");
+  fbRef.set(state)
+    .then(()=>{ if(syncOn) syncStatus("☁️ متزامن مع باقي الأجهزة","#d5f5e3"); })
+    .catch(()=> syncStatus("🔴 المزامنة متوقفة — هتتم إعادة المحاولة تلقائيًا","#f9d5d0"));
+}
+function schedulePush(){ clearTimeout(pushTimer); pushTimer=setTimeout(cloudPush,700); }
+window.addEventListener("online", ()=>{ if(syncOn) cloudPush(); });
+setInterval(()=>{ if(syncOn && !navigator.onLine) syncStatus("🔴 أوفلاين — التعديلات محفوظة وهتتم مزامنتها مع رجوع النت","#f9d5d0"); }, 4000);
+
+function parseFbConfig(fb){
+  let s = String(fb).trim();
+  const m = s.match(/\{[\s\S]*\}/);            // extract { ... } even if wrapped in const ...
+  if(m) s = m[0];
+  s = s.replace(/([\{,]\s*)([a-zA-Z_$][\w$]*)\s*:/g, '$1"$2":');  // quote unquoted keys
+  s = s.replace(/,\s*([\}\]])/g, '$1');          // remove trailing commas
+  return JSON.parse(s);
+}
+function initSyncFromSettings(){
+  if(typeof firebase==="undefined"){ syncStatus("🔴 تعذر تحميل مكتبة Firebase (تحققي من الإنترنت أول مرة)","#f9d5d0"); return; }
+  const cfg=getSyncCfg();
+  if(!cfg.fbconfig || !cfg.code){ syncStatus("🟡 المزامنة غير مفعّلة — فعّليها من الإعدادات","#fdebd0"); return; }
+  let parsed;
+  try{ parsed = typeof cfg.fbconfig==="string" ? parseFbConfig(cfg.fbconfig) : cfg.fbconfig; }
+  catch(e){ syncStatus("⚠️ تعذر قراءة إعداد Firebase — اعملي نسخ للكود كامل من أول { لآخر }","#f9d5d0"); return; }
+  try{
+    if(!fbApp){ fbApp=firebase.initializeApp(parsed); fbDb=firebase.database(); }
+    if(fbRef){ fbRef.off(); }
+    fbRef=fbDb.ref("studios/"+cfg.code);
+    syncOn=true; firstSnapshot=true;
+    syncStatus("🟡 جاري الاتصال بالسحابة...","#fdebd0");
+    fbRef.on("value", snap=>{
+      const v=snap.val();
+      if(firstSnapshot){
+        firstSnapshot=false;
+        if(v && (v.updatedAt||0) > (state.updatedAt||0)){
+          state=v; save(true); rerenderAll();
+          syncStatus("☁️ متزامن — اتجلبت البيانات من السحابة","#d5f5e3");
+        } else {
+          cloudPush();
+        }
+      } else if(v && (v.updatedAt||0) > (state.updatedAt||0)){
+        state=v; save(true); rerenderAll();
+        syncStatus("☁️ تمت المزامنة من جهاز آخر","#d5f5e3");
+      }
+    }, err=>{ syncOn=false; syncStatus("🔴 خطأ في الاتصال: "+(err.code||""),"#f9d5d0"); });
+  }catch(e){ syncOn=false; syncStatus("⚠️ تعذر تفعيل المزامنة — راجعي الإعداد","#f9d5d0"); }
+}
+function saveSyncSettings(){
+  const code=document.getElementById("s_code").value.trim();
+  const fb=document.getElementById("s_fb").value.trim();
+  if(!code){ toast("⚠️ اكتبي كود المزامنة"); return; }
+  if(!fb){ toast("⚠️ الصقي إعدادات Firebase"); return; }
+  try{ parseFbConfig(fb); }catch(e){ toast("⚠️ تعذر قراءة الكود — اعملي نسخ من أول { لآخر }"); return; }
+  setSyncCfg({code, fbconfig:fb});
+  toast("✅ تم حفظ إعدادات المزامنة");
+  initSyncFromSettings();
+}
+function clearSync(){
+  if(fbRef){ fbRef.off(); }
+  syncOn=false; setSyncCfg({});
+  document.getElementById("s_code").value=""; document.getElementById("s_fb").value="";
+  syncStatus("🟡 المزامنة متوقفة — البيانات محفوظة على الجهاز فقط","#fdebd0");
+}
+function fillSyncSettings(){
+  const cfg=getSyncCfg();
+  document.getElementById("s_code").value=cfg.code||"";
+  document.getElementById("s_fb").value=cfg.fbconfig||"";
+}
+
+// ================== نسخ احتياطي ==================
+function exportData(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="shorouk-backup-"+todayStr()+".json";
+  a.click(); toast("⬇️ تم تنزيل النسخة الاحتياطية");
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ state=JSON.parse(r.result); save(); fillClientSelect(); renderDash(); toast("✅ تم الاسترجاع"); }
+    catch(e){ toast("⚠️ ملف غير صالح"); } };
+  r.readAsText(f); ev.target.value="";
+}
+
+// ================== تشغيل ==================
+fillClientSelect();
+renderDash();
+addItem();
+calcTotal();
+
+// تسجيل Service Worker للعمل أوفلاين
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
+}
+// تشغيل المزامنة السحابية
+initSyncFromSettings();
+</script>
+</body>
+</html>

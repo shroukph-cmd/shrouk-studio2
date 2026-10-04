@@ -1,0 +1,16 @@
+{
+  "name": "استوديو شروق إبراهيم",
+  "short_name": "استوديو شروق",
+  "description": "نظام إدارة الحجوزات والفواتير — استوديو شروق إبراهيم",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#f4f1f7",
+  "theme_color": "#8e44ad",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
